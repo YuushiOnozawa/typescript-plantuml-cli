@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "baseUrl": "./src",
+    "allowJs": false,
+    "checkJs": false,
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": "./bin",
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* typescript check options */
+    // TODO:段階を見て徐々にonにしていく。最終目標はstrict: true,
+    "strict": true,
+
+    "preserveConstEnums": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+  "compileOnSave": true,
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    ".git",
+    "node_modules"
+  ]
+}
