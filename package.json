@@ -10,6 +10,7 @@
   "devDependencies": {
     "@types/fs-extra": "^5.0.0",
     "@types/glob": "^5.0.34",
+    "caporal": "^0.9.0",
     "commander": "^2.12.2",
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
