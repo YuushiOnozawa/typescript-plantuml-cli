@@ -6,14 +6,15 @@
   "bin": {
     "tsuml": "bin/tsuml-cli"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "commander": "^2.12.2",
-    "typescript": "^2.6.2",
-    "typescript-uml": "^0.3.0",
+    "@types/fs-extra": "^5.0.0",
     "@types/glob": "^5.0.34",
-    "glob": "^7.1.2"
+    "commander": "^2.12.2",
+    "fs-extra": "^5.0.0",
+    "glob": "^7.1.2",
+    "typescript": "^2.6.2",
+    "typescript-uml": "^0.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
