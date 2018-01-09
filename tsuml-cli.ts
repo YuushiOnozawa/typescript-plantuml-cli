@@ -14,7 +14,7 @@ program
   .argument('<output>', 'output dir')
   .option('--combine [cflg]', 'make combined file')
   .option('--combineFile [cname]', 'make combined file name')
-  .option('--makeimage', 'make image')
+  .option('--makeimage', 'make image(.png files) use http://www.plantuml.com/plantuml/png/')
   .action((arg: any, option: any) => {
     // validation
     if(!arg.files) {
@@ -81,7 +81,11 @@ function makeCombinedPumlFile(combinedFile: string, outputDir: string, isMakeIma
   fs.outputFile(combinedFile, pathListString)
     .then(() => {
       if(isMakeImage) {
-        const imageFile: string = path.join(process.cwd(), path.dirname(combinedFile), path.basename(combinedFile, path.extname(combinedFile)) + '.png');
+        const imageFile: string = path.join(
+          process.cwd(),
+          path.dirname(combinedFile),
+          path.basename(combinedFile, path.extname(combinedFile)) + '.png'
+        );
         makeImage(pathListString, imageFile);
       }
     })

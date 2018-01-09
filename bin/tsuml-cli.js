@@ -13,7 +13,7 @@ program
     .argument('<output>', 'output dir')
     .option('--combine [cflg]', 'make combined file')
     .option('--combineFile [cname]', 'make combined file name')
-    .option('--makeimage', 'make image')
+    .option('--makeimage', 'make image(.png files) use http://www.plantuml.com/plantuml/png/')
     .action(function (arg, option) {
     // validation
     if (!arg.files) {
