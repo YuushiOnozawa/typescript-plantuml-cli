@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "allowJs": false,
     "checkJs": false,
     "sourceMap": true,
@@ -12,9 +12,7 @@
     "allowSyntheticDefaultImports": true,
 
     /* typescript check options */
-    // TODO:段階を見て徐々にonにしていく。最終目標はstrict: true,
     "strict": true,
-
     "preserveConstEnums": true,
     "lib": [
       "es2017",
@@ -25,9 +23,7 @@
     ]
   },
   "compileOnSave": true,
-  "include": [
-    "src/**/*"
-  ],
+  "include": [],
   "exclude": [
     ".git",
     "node_modules"
