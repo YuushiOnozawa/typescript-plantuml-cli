@@ -27,15 +27,17 @@ program
     }
     var fileList = glob.sync(arg.files);
     var fileListNum = fileList.length;
+    var combinedPumlString = '';
     fileList.forEach(function (item) {
         var tmpPath = path.parse(item);
         var outDir = path.join(process.cwd(), arg.output, tmpPath.dir);
         var outFileBase = path.join(outDir, tmpPath.name);
         var plantumlData = getPlantUmlData(item);
-        fs.outputFile(outFileBase + '.puml', plantumlData)
+        fs.outputFile(outFileBase + '.puml', addUmlTagString(plantumlData))
             .then(function () {
             if (option.makeimage) {
-                makeImage(plantumlData, outFileBase + '.png');
+                combinedPumlString += plantumlData + "\n";
+                makeImage(addUmlTagString(plantumlData), outFileBase + '.png');
             }
             if (outputFileNum >= fileListNum) {
                 if (!option.combine) {
@@ -46,7 +48,7 @@ program
                     console.error('no output combined file');
                     process.exit(1);
                 }
-                makeCombinedPumlFile(option.combineFile, arg.output, option.makeimage);
+                makeCombinedPumlFile(option.combineFile, combinedPumlString, arg.output, option.makeimage);
             }
             else {
                 outputFileNum++;
@@ -64,18 +66,18 @@ function getPlantUmlData(filepath) {
     return tsuml.TypeScriptUml.generateClassDiagram(tsuml.TypeScriptUml.parseFile(filepath, ts.ScriptTarget.ES5), {
         formatter: 'plantuml',
         plantuml: {
-            diagramTags: true,
+            diagramTags: false,
         },
     });
 }
-function makeCombinedPumlFile(combinedFile, outputDir, isMakeImage) {
+function makeCombinedPumlFile(combinedFile, combinedPumlString, outputDir, isMakeImage) {
     var outFileList = glob.sync(path.join(outputDir, '**/*.puml'));
-    var pathListString = makeCombinedPumlString(outFileList, combinedFile);
-    fs.outputFile(combinedFile, pathListString)
+    var pathListString = makeCombinedPathList(outFileList, combinedFile);
+    fs.outputFile(combinedFile, addUmlTagString(pathListString))
         .then(function () {
         if (isMakeImage) {
             var imageFile = path.join(process.cwd(), path.dirname(combinedFile), path.basename(combinedFile, path.extname(combinedFile)) + '.png');
-            makeImage(pathListString, imageFile);
+            makeImage(combinedPumlString, imageFile);
         }
     })
         .catch(function (err) {
@@ -84,13 +86,11 @@ function makeCombinedPumlFile(combinedFile, outputDir, isMakeImage) {
         }
     });
 }
-function makeCombinedPumlString(pathList, combinedFile) {
+function makeCombinedPathList(pathList, combinedFile) {
     var includePathList = [];
-    includePathList.push('@startuml');
     pathList.forEach(function (item) {
         includePathList.push("!include " + path.resolve(path.join(process.cwd(), combinedFile), path.join(process.cwd(), item)));
     });
-    includePathList.push('@enduml');
     return includePathList.join('\n');
 }
 function makeImage(umlData, outFile) {
@@ -109,5 +109,8 @@ function makeImage(umlData, outFile) {
         }
     });
     return;
+}
+function addUmlTagString(str) {
+    return "@startuml\n" + str + "\n@enduml";
 }
 //# sourceMappingURL=tsuml-cli.js.map

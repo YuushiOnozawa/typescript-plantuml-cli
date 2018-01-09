@@ -1,6 +1,6 @@
 {
   "name": "tsuml-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "make from .ts files to .puml and .png files cli\n this module using [typescript-uml](https://github.com/fsahmad/typescript-uml)",
   "types": "bin/tsuml-cli.d.ts",
   "bin": {

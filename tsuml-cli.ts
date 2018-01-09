@@ -29,16 +29,19 @@ program
     }
     const fileList: string[] = glob.sync(arg.files);
     const fileListNum: number = fileList.length;
+    let combinedPumlString: string = '';
+
     fileList.forEach((item: string) => {
       const tmpPath = path.parse(item);
       const outDir: string = path.join(process.cwd(), arg.output, tmpPath.dir);
       const outFileBase: string = path.join(outDir, tmpPath.name);
       const plantumlData: string = getPlantUmlData(item);
 
-      fs.outputFile(outFileBase + '.puml', plantumlData)
+      fs.outputFile(outFileBase + '.puml', addUmlTagString(plantumlData))
         .then(() => {
           if(option.makeimage) {
-            makeImage(plantumlData, outFileBase + '.png');
+            combinedPumlString += `${plantumlData}\n`;
+            makeImage(addUmlTagString(plantumlData), outFileBase + '.png');
           }
           if(outputFileNum >= fileListNum) {
             if(!option.combine) {
@@ -50,7 +53,7 @@ program
               console.error('no output combined file');
               process.exit(1);
             }
-            makeCombinedPumlFile(option.combineFile, arg.output, option.makeimage);
+            makeCombinedPumlFile(option.combineFile, combinedPumlString, arg.output, option.makeimage);
           } else {
             outputFileNum++;
           }
@@ -70,17 +73,16 @@ function getPlantUmlData(filepath: string) {
     {
       formatter: 'plantuml',
       plantuml: {
-        diagramTags: true,
+        diagramTags: false,
       },
     },
   )
 }
 
-function makeCombinedPumlFile(combinedFile: string, outputDir: string, isMakeImage: boolean | undefined) {
+function makeCombinedPumlFile(combinedFile: string, combinedPumlString: string,outputDir: string, isMakeImage: boolean | undefined) {
   const outFileList: string[] = glob.sync(path.join(outputDir, '**/*.puml'));
-  const pathListString: string = makeCombinedPumlString(outFileList, combinedFile);
-
-  fs.outputFile(combinedFile, pathListString)
+  const pathListString: string = makeCombinedPathList(outFileList, combinedFile);
+  fs.outputFile(combinedFile, addUmlTagString(pathListString))
     .then(() => {
       if(isMakeImage) {
         const imageFile: string = path.join(
@@ -88,7 +90,7 @@ function makeCombinedPumlFile(combinedFile: string, outputDir: string, isMakeIma
           path.dirname(combinedFile),
           path.basename(combinedFile, path.extname(combinedFile)) + '.png'
         );
-        makeImage(pathListString, imageFile);
+        makeImage(combinedPumlString, imageFile);
       }
     })
     .catch((err: Error) => {
@@ -98,13 +100,11 @@ function makeCombinedPumlFile(combinedFile: string, outputDir: string, isMakeIma
     });
 }
 
-function makeCombinedPumlString(pathList: string[], combinedFile: string): string {
+function makeCombinedPathList(pathList: string[], combinedFile: string): string {
   const includePathList: string[] = [];
-  includePathList.push('@startuml');
   pathList.forEach((item: string) => {
     includePathList.push(`!include ${path.resolve(path.join(process.cwd(), combinedFile), path.join(process.cwd(), item))}`);
   });
-  includePathList.push('@enduml');
   return includePathList.join('\n');
 }
 
@@ -126,4 +126,8 @@ function makeImage(umlData: string, outFile: string): void {
   });
 
   return;
+}
+
+function addUmlTagString(str: string): string {
+  return `@startuml\n${str}\n@enduml`
 }
