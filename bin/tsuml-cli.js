@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 var ts = require('typescript');
 var tsuml = require('typescript-uml');

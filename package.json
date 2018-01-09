@@ -1,36 +1,39 @@
 {
   "name": "tsuml-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "make from .ts files to .puml and .png files cli\n this module using [typescript-uml](https://github.com/fsahmad/typescript-uml)",
-  "main": "index.js",
+  "types": "bin/tsuml-cli.d.ts",
   "bin": {
-    "tsuml": "bin/tsuml-cli"
+    "tsuml": "bin/tsuml-cli.js"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@types/fs-extra": "^5.0.0",
-    "@types/glob": "^5.0.34",
+  "files": [
+    "bin/tsuml-cli.js",
+    "bin/tsuml-cli.d.ts",
+    "bin/tsuml-cli.js.map"
+  ],
+  "dependencies": {
     "caporal": "^0.9.0",
     "commander": "^2.12.2",
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
     "plantuml-encoder": "latest",
     "request": "^2.83.0",
-    "typescript": "^2.6.2",
     "typescript-uml": "^0.3.0"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.0",
+    "@types/glob": "^5.0.34",
+    "typescript": "^2.6.2"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YuushiOnozawa/tsuml-loader.git"
+    "url": "git+https://github.com/YuushiOnozawa/typescript-plantuml-cli.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Yuushi Onozawa",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/YuushiOnozawa/tsuml-loader/issues"
+    "url": "https://github.com/YuushiOnozawa/typescript-plantuml-cli/issues"
   },
-  "homepage": "https://github.com/YuushiOnozawa/tsuml-loader#readme"
+  "homepage": "https://github.com/YuushiOnozawa/typescript-plantuml-cli#readme"
 }

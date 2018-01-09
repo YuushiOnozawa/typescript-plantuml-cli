@@ -8,7 +8,7 @@ or
 
 after
 
-`tsuml-cli <filepath> <outputpath> [options]`
+`tsuml <filepath> <outputpath> [options]`
 
 # options 
 |options||

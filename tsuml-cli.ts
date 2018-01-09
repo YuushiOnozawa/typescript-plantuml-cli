@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const ts = require('typescript');
 const tsuml = require('typescript-uml');
 const program = require('caporal');
