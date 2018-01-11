@@ -8,6 +8,7 @@ var fs = require('fs-extra');
 var path = require('path');
 var pumlenc = require('plantuml-encoder');
 var request = require('request');
+var puml = require('node-plantuml');
 var outputFileNum = 1;
 program
     .argument('<files>', 'input files path')
@@ -15,6 +16,7 @@ program
     .option('--combine [cflg]', 'make combined file')
     .option('--combineFile [cname]', 'make combined file name')
     .option('--makeimage', 'make image(.png files) use http://www.plantuml.com/plantuml/png/')
+    .option('--makelocal', 'make image(.png files) use local plantuml and Graphbiz')
     .action(function (arg, option) {
     // validation
     if (!arg.files) {
@@ -37,7 +39,7 @@ program
             .then(function () {
             if (option.makeimage) {
                 combinedPumlString += plantumlData + "\n";
-                makeImage(addUmlTagString(plantumlData), outFileBase + '.png');
+                makeImage(addUmlTagString(plantumlData), outFileBase + '.png', option.makelocal, outFileBase + '.puml');
             }
             if (outputFileNum >= fileListNum) {
                 if (!option.combine) {
@@ -48,7 +50,7 @@ program
                     console.error('no output combined file');
                     process.exit(1);
                 }
-                makeCombinedPumlFile(option.combineFile, combinedPumlString, arg.output, option.makeimage);
+                makeCombinedPumlFile(option.combineFile, combinedPumlString, arg.output, option.makeimage, option.makelocal);
             }
             else {
                 outputFileNum++;
@@ -70,14 +72,14 @@ function getPlantUmlData(filepath) {
         },
     });
 }
-function makeCombinedPumlFile(combinedFile, combinedPumlString, outputDir, isMakeImage) {
+function makeCombinedPumlFile(combinedFile, combinedPumlString, outputDir, isMakeImage, isLocal) {
     var outFileList = glob.sync(path.join(outputDir, '**/*.puml'));
     var pathListString = makeCombinedPathList(outFileList, combinedFile);
     fs.outputFile(combinedFile, addUmlTagString(pathListString))
         .then(function () {
         if (isMakeImage) {
             var imageFile = path.join(process.cwd(), path.dirname(combinedFile), path.basename(combinedFile, path.extname(combinedFile)) + '.png');
-            makeImage(combinedPumlString, imageFile);
+            makeImage(combinedPumlString, imageFile, isLocal, combinedFile);
         }
     })
         .catch(function (err) {
@@ -93,21 +95,27 @@ function makeCombinedPathList(pathList, combinedFile) {
     });
     return includePathList.join('\n');
 }
-function makeImage(umlData, outFile) {
-    request({
-        method: 'GET',
-        url: "http://www.plantuml.com/plantuml/png/" + pumlenc.encode(umlData),
-        encoding: null
-    }, function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-            fs.outputFile(outFile, body, 'binary')
-                .catch(function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-            });
-        }
-    });
+function makeImage(umlData, outFile, makeLocal, umlFilePath) {
+    if (makeLocal) {
+        var gen = puml.generate(umlFilePath);
+        gen.out.pipe(fs.createWriteStream(umlFilePath.replace('.puml', '.png')));
+    }
+    else {
+        request({
+            method: 'GET',
+            url: "http://www.plantuml.com/plantuml/png/" + pumlenc.encode(umlData),
+            encoding: null
+        }, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                fs.outputFile(outFile, body, 'binary')
+                    .catch(function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+            }
+        });
+    }
     return;
 }
 function addUmlTagString(str) {
