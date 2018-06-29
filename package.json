@@ -1,6 +1,6 @@
 {
   "name": "tsuml-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "make from .ts files to .puml and .png files cli\n this module using [typescript-uml](https://github.com/fsahmad/typescript-uml)",
   "types": "bin/tsuml-cli.d.ts",
   "bin": {
@@ -12,9 +12,9 @@
     "bin/tsuml-cli.js.map"
   ],
   "dependencies": {
-    "caporal": "^0.9.0",
+    "caporal": "^0.10.0",
     "commander": "^2.12.2",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^6.0.1",
     "glob": "^7.1.2",
     "node-plantuml": "github:YuushiOnozawa/node-plantuml",
     "plantuml-encoder": "latest",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/fs-extra": "^5.0.0",
     "@types/glob": "^5.0.34",
+    "@types/node": "^10.5.0",
     "typescript": "^2.6.2"
   },
   "repository": {
