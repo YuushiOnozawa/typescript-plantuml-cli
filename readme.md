@@ -24,6 +24,6 @@ after
 
 # Example:
 
-tsuml "./src/app/\**/*.ts" docs/uml --combine --combineFile "docc/all.puml"
+tsuml "./src/app/**/*.ts" docs/uml --combine --combineFile "docs/all.puml"
 
 ![screenshot](https://github.com/ddehghan/typescript-plantuml-cli/blob/656f3f731bc04c7b8452c9d624737b313e2429bf/doc/screenshot.png)
